@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alumni Connect - Where Today's Students Meet Tomorrow's Trailblazers</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #0a0a0a;
+      overflow-x: hidden;
+    }
+    
+    /* Animated background */
+    .animated-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.1;
+    }
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      animation: float 8s ease-in-out infinite;
+    }
+    .orb-1 {
+      width: 300px;
+      height: 300px;
+      background: linear-gradient(45deg, #ff0080, #7928ca);
+      top: 10%;
+      left: 10%;
+      animation-delay: 0s;
+    }
+    .orb-2 {
+      width: 400px;
+      height: 400px;
+      background: linear-gradient(45deg, #007cf0, #00ffb8);
+      top: 60%;
+      right: 10%;
+      animation-delay: 2s;
+    }
+    .orb-3 {
+      width: 250px;
+      height: 250px;
+      background: linear-gradient(45deg, #ffeb3b, #ff0080);
+      bottom: 20%;
+      left: 50%;
+      animation-delay: 4s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-30px) rotate(180deg); }
+    }
+    
+    /* Page entrance animations */
+    .fade-in-up {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+    .fade-in-up.delay-1 { animation-delay: 0.2s; }
+    .fade-in-up.delay-2 { animation-delay: 0.4s; }
+    .fade-in-up.delay-3 { animation-delay: 0.6s; }
+    
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Navbar animations */
+    .nav-link {
+      position: relative;
+      overflow: hidden;
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .nav-link-content {
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .nav-link:hover .nav-link-content {
+      transform: translateY(-32px);
+    }
+    
+    .nav-text {
+      height: 32px;
+      line-height: 32px;
+      display: block;
+    }
+    
+    .nav-text-default {
+      color: #9ca3af;
+      font-weight: 400;
+    }
+    
+    .nav-text-hover {
+      color: white;
+      font-weight: 500;
+    }
+    
+    /* Rainbow button */
+    .rainbow-button {
+      position: relative;
+      background: linear-gradient(45deg, #ff0080, #7928ca, #007cf0, #00ffb8, #ffeb3b);
+      background-size: 300% 300%;
+      animation: gradientShift 3s ease-in-out infinite;
+      border-radius: 0.5rem;
+      padding: 0.75rem 2rem;
+      font-weight: 600;
+      color: white;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+    
+    .rainbow-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .rainbow-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .rainbow-button:hover::before {
+      left: 100%;
+    }
+    
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+  </style>
+</head>
+<body class="bg-black text-white font-sans min-h-screen">
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+  </div>
+
+  <!-- Navbar -->
+  <header id="navbar" class="fixed top-6 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center pl-6 pr-6 py-3 backdrop-blur-sm rounded-full border border-[#333] bg-[#1f1f1f57] w-[calc(100%-2rem)] sm:w-auto transition-[border-radius] duration-300 ease-in-out">
+    
+    <div class="flex items-center justify-between w-full gap-x-6 sm:gap-x-8">
+      <!-- Logo -->
+      <div class="flex items-center">
+        <div class="relative w-5 h-5 flex items-center justify-center">
+          <span class="absolute w-1.5 h-1.5 rounded-full bg-gray-200 top-0 left-1/2 transform -translate-x-1/2 opacity-80"></span>
+          <span class="absolute w-1.5 h-1.5 rounded-full bg-gray-200 left-0 top-1/2 transform -translate-y-1/2 opacity-80"></span>
+          <span class="absolute w-1.5 h-1.5 rounded-full bg-gray-200 right-0 top-1/2 transform -translate-y-1/2 opacity-80"></span>
+          <span class="absolute w-1.5 h-1.5 rounded-full bg-gray-200 bottom-0 left-1/2 transform -translate-x-1/2 opacity-80"></span>
+        </div>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden sm:flex items-center space-x-4 sm:space-x-6 text-sm">
+        <div class="nav-link px-3 py-2 rounded-lg transition-all duration-200 hover:bg-white/5 cursor-pointer" onclick="window.open('/dashboard.html', '_blank')">
+          <div class="nav-link-content">
+            <span class="nav-text nav-text-default">Manifesto</span>
+            <span class="nav-text nav-text-hover">Manifesto</span>
+          </div>
+        </div>
+        <div class="nav-link px-3 py-2 rounded-lg transition-all duration-200 hover:bg-white/5 cursor-pointer" onclick="window.open('/dashboard.html', '_blank')">
+          <div class="nav-link-content">
+            <span class="nav-text nav-text-default">Careers</span>
+            <span class="nav-text nav-text-hover">Careers</span>
+          </div>
+        </div>
+        <div class="nav-link px-3 py-2 rounded-lg transition-all duration-200 hover:bg-white/5 cursor-pointer" onclick="window.open('/dashboard.html', '_blank')">
+          <div class="nav-link-content">
+            <span class="nav-text nav-text-default">Discover</span>
+            <span class="nav-text nav-text-hover">Discover</span>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Desktop Buttons -->
+      <div class="hidden sm:flex items-center gap-2 sm:gap-3">
+        <button class="px-4 py-2 sm:px-3 text-xs sm:text-sm border border-[#333] bg-[rgba(31,31,31,0.62)] text-gray-300 rounded-full hover:border-white hover:text-white transition-all duration-300 w-full sm:w-auto hover:bg-white/10 hover:shadow-lg hover:shadow-white/10">
+          LogIn
+        </button>
+        <div class="relative group w-full sm:w-auto">
+          <div class="absolute inset-0 -m-2 rounded-full hidden sm:block bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 opacity-30 filter blur-lg pointer-events-none transition-all duration-500 ease-out group-hover:opacity-80 group-hover:blur-xl group-hover:-m-4 group-hover:scale-110"></div>
+          <button class="relative z-10 px-4 py-2 sm:px-3 text-xs sm:text-sm font-semibold text-black bg-gradient-to-br from-gray-100 to-gray-300 rounded-full hover:from-white hover:to-gray-200 transition-all duration-300 w-full sm:w-auto hover:scale-105 hover:shadow-xl hover:shadow-purple-500/25">
+            Signup
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button id="mobile-menu-btn" class="sm:hidden flex items-center justify-center w-8 h-8 text-gray-300 focus:outline-none" aria-label="Open Menu">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="sm:hidden flex flex-col items-center w-full transition-all ease-in-out duration-300 overflow-hidden max-h-0 opacity-0 pt-0 pointer-events-none">
+      <nav class="flex flex-col items-center space-y-4 text-base w-full">
+        <button class="text-gray-300 hover:text-white transition-all duration-300 w-full text-center cursor-pointer py-2 px-4 rounded-lg hover:bg-white/5 hover:scale-105" onclick="window.open('/dashboard.html', '_blank')">
+          Manifesto
+        </button>
+        <button class="text-gray-300 hover:text-white transition-all duration-300 w-full text-center cursor-pointer py-2 px-4 rounded-lg hover:bg-white/5 hover:scale-105" onclick="window.open('/dashboard.html', '_blank')">
+          Careers
+        </button>
+        <button class="text-gray-300 hover:text-white transition-all duration-300 w-full text-center cursor-pointer py-2 px-4 rounded-lg hover:bg-white/5 hover:scale-105" onclick="window.open('/dashboard.html', '_blank')">
+          Discover
+        </button>
+      </nav>
+      <div class="flex flex-col items-center space-y-4 mt-4 w-full">
+        <button class="px-4 py-2 text-sm border border-[#333] bg-[rgba(31,31,31,0.62)] text-gray-300 rounded-full hover:border-white hover:text-white transition-all duration-300 w-full hover:bg-white/10 hover:shadow-lg hover:shadow-white/10">
+          LogIn
+        </button>
+        <div class="relative group w-full">
+          <div class="absolute inset-0 -m-2 rounded-full bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 opacity-30 filter blur-lg pointer-events-none transition-all duration-500 ease-out group-hover:opacity-80 group-hover:blur-xl group-hover:-m-4 group-hover:scale-110"></div>
+          <button class="relative z-10 px-4 py-2 text-sm font-semibold text-black bg-gradient-to-br from-gray-100 to-gray-300 rounded-full hover:from-white hover:to-gray-200 transition-all duration-300 w-full hover:scale-105 hover:shadow-xl hover:shadow-purple-500/25">
+            Signup
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="relative z-20 flex flex-col items-center justify-center h-screen text-center px-4">
+    <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-8 fade-in-up" style="font-family: 'MedievalSharp', cursive;">
+      Where Today's Students Meet Tomorrow's Trailblazers.
+    </h1>
+    <p class="text-base md:text-lg text-white font-light max-w-2xl mb-8 fade-in-up delay-1">
+      finding alumni now become easy - Alumni connect
+    </p>
+    <div class="fade-in-up delay-2">
+      <a href="/dashboard.html" class="rainbow-button">
+        Get Started
+      </a>
+    </div>
+  </main>
+
+  <script>
+    // Mobile menu functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navbar = document.getElementById('navbar');
+        let isOpen = false;
+
+        mobileMenuBtn.addEventListener('click', function() {
+            isOpen = !isOpen;
+            
+            if (isOpen) {
+                // Open menu
+                mobileMenu.classList.remove('max-h-0', 'opacity-0', 'pt-0', 'pointer-events-none');
+                mobileMenu.classList.add('max-h-[1000px]', 'opacity-100', 'pt-4');
+                navbar.classList.remove('rounded-full');
+                navbar.classList.add('rounded-xl');
+                
+                // Change icon to X
+                mobileMenuBtn.innerHTML = `
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                `;
+                mobileMenuBtn.setAttribute('aria-label', 'Close Menu');
+            } else {
+                // Close menu
+                mobileMenu.classList.remove('max-h-[1000px]', 'opacity-100', 'pt-4');
+                mobileMenu.classList.add('max-h-0', 'opacity-0', 'pt-0', 'pointer-events-none');
+                
+                // Change back to hamburger after animation
+                setTimeout(() => {
+                    navbar.classList.remove('rounded-xl');
+                    navbar.classList.add('rounded-full');
+                }, 300);
+                
+                // Change icon back to hamburger
+                mobileMenuBtn.innerHTML = `
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                `;
+                mobileMenuBtn.setAttribute('aria-label', 'Open Menu');
+            }
+        });
+
+        // Close menu when clicking on a link
+        const mobileLinks = mobileMenu.querySelectorAll('button');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (isOpen) {
+                    mobileMenuBtn.click();
+                }
+            });
+        });
+    });
+  </script>
+</body>
+</html>
+

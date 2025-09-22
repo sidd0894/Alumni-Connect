@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore Alumni - Alumni Connect</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #0a0a0a;
+    }
+    .rainbow-border {
+      position: relative;
+      border-radius: 2rem;
+      padding: 4px; /* Space for the border */
+      background: linear-gradient(270deg, #ff0080, #7928ca, #007cf0, #00ffb8, #ffeb3b, #ff0080);
+      background-size: 400% 400%;
+      animation: rainbowBorder 8s linear infinite;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+      max-width: 90vw;
+      margin: 0 auto;
+    }
+    @keyframes rainbowBorder {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .glass {
+      background: #111;
+      border-radius: 1.8rem;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+      max-height: 600px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #444 #111;
+    }
+    /* Chrome, Edge, Safari */
+    .glass::-webkit-scrollbar {
+      width: 10px;
+      background: #111;
+      border-radius: 8px;
+    }
+    .glass::-webkit-scrollbar-thumb {
+      background: #444;
+      border-radius: 8px;
+      border: 2px solid #111;
+    }
+    .glass::-webkit-scrollbar-thumb:hover {
+      background: #666;
+    }
+    .glass::-webkit-scrollbar-corner {
+      background: #111;
+    }
+    .alumni-table th, .alumni-table td {
+      font-size: 1.15rem;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+    .alumni-table th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #111;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+    }
+    .alumni-table thead tr {
+      border-radius: 0 !important;
+    }
+    .connect-btn {
+      background: #fff;
+      color: #111;
+      font-weight: 700;
+      border-radius: 9999px;
+      box-shadow: 0 2px 12px 0 rgba(255,255,255,0.10);
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+      padding: 0.75rem 2.25rem;
+      font-size: 1.1rem;
+    }
+    .connect-btn:hover {
+      background: #f3f4f6;
+      color: #000;
+      box-shadow: 0 4px 24px 0 rgba(255,255,255,0.18);
+      transform: translateY(-2px) scale(1.04);
+    }
+    .alumni-table tr {
+      transition: background 0.2s;
+    }
+    .alumni-table tr:hover {
+      background: rgba(255,255,255,0.04);
+    }
+    /* Search bar styles */
+    .search-container {
+      position: fixed;
+      top: 2rem;
+      left: 2rem;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      min-height: 3.5rem;
+    }
+    .filter-container {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .search-icon-btn {
+      background: #18181b;
+      border: none;
+      outline: none;
+      border-radius: 9999px;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 0 2px 8px 0 rgba(0,0,0,0.12);
+    }
+    .search-icon-btn:hover {
+      background: #23232a;
+    }
+    .search-input {
+      width: 0;
+      opacity: 0;
+      padding: 0.5rem 0;
+      font-size: 1.1rem;
+      border: none;
+      outline: none;
+      border-radius: 1.5rem;
+      background: #18181b;
+      color: #fff;
+      transition: width 0.3s cubic-bezier(.4,2,.6,1), opacity 0.2s;
+      box-shadow: 0 2px 8px 0 rgba(0,0,0,0.12);
+    }
+    .search-container.active .search-input {
+      width: 220px;
+      opacity: 1;
+      padding: 0.5rem 1.25rem;
+      margin-left: 0.5rem;
+    }
+    .search-close-btn {
+      background: transparent;
+      border: none;
+      color: #aaa;
+      font-size: 1.3rem;
+      cursor: pointer;
+      margin-left: 0.25rem;
+      transition: color 0.2s;
+    }
+    .search-close-btn:hover {
+      color: #fff;
+    }
+    /* Filter button styles */
+    .filter-btn {
+      background: #18181b;
+      border: none;
+      outline: none;
+      border-radius: 9999px;
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 0 2px 8px 0 rgba(0,0,0,0.12);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .filter-btn:hover {
+      background: #23232a;
+    }
+    .filter-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: #18181b;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 16px 0 rgba(0,0,0,0.3);
+      padding: 0.5rem 0;
+      min-width: 200px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.2s ease;
+      z-index: 21;
+    }
+    .filter-dropdown.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .filter-option {
+      padding: 0.75rem 1rem;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 0.9rem;
+    }
+    .filter-option:hover {
+      background: #23232a;
+    }
+    .filter-option.active {
+      background: #333;
+      color: #fff;
+    }
+    
+    /* Meteor shower effect */
+    .meteor-shower {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
+    
+    .meteor {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: linear-gradient(45deg, #fff, #87ceeb);
+      border-radius: 50%;
+      box-shadow: 0 0 10px #fff, 0 0 20px #87ceeb;
+      animation: meteorFall linear infinite;
+    }
+    
+    .meteor::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 120px;
+      height: 2px;
+      background: linear-gradient(90deg, #fff, rgba(135, 206, 235, 0.8), transparent);
+      transform: translateX(-120px);
+    }
+    
+    .meteor::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.9), transparent);
+      transform: translateX(-60px);
+    }
+    
+    /* Right-to-left meteors */
+    .meteor.right-to-left {
+      animation: meteorFallRight linear infinite;
+    }
+    
+    .meteor.right-to-left::before {
+      background: linear-gradient(270deg, #fff, rgba(135, 206, 235, 0.8), transparent);
+      transform: translateX(120px);
+    }
+    
+    .meteor.right-to-left::after {
+      background: linear-gradient(270deg, rgba(255,255,255,0.9), transparent);
+      transform: translateX(60px);
+    }
+    
+    @keyframes meteorFall {
+      0% {
+        transform: translateX(-100px) translateY(-100px) rotate(45deg);
+        opacity: 0;
+      }
+      5% {
+        opacity: 1;
+      }
+      95% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(100vw) translateY(100vh) rotate(45deg);
+        opacity: 0;
+      }
+    }
+    
+    @keyframes meteorFallRight {
+      0% {
+        transform: translateX(100vw) translateY(-100px) rotate(-45deg);
+        opacity: 0;
+      }
+      5% {
+        opacity: 1;
+      }
+      95% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(-100px) translateY(100vh) rotate(-45deg);
+        opacity: 0;
+      }
+    }
+    
+    /* Left-to-right meteors */
+    .meteor:nth-child(1) {
+      top: 15%;
+      left: -100px;
+      animation-delay: 0s;
+      animation-duration: 2.5s;
+    }
+    
+    .meteor:nth-child(2) {
+      top: 35%;
+      left: -100px;
+      animation-delay: 1.2s;
+      animation-duration: 2.8s;
+    }
+    
+    .meteor:nth-child(3) {
+      top: 55%;
+      left: -100px;
+      animation-delay: 2.5s;
+      animation-duration: 2.2s;
+    }
+    
+    .meteor:nth-child(4) {
+      top: 75%;
+      left: -100px;
+      animation-delay: 0.8s;
+      animation-duration: 3s;
+    }
+    
+    /* Right-to-left meteors */
+    .meteor:nth-child(5) {
+      top: 25%;
+      right: -100px;
+      animation-delay: 1.8s;
+      animation-duration: 2.3s;
+    }
+    
+    .meteor:nth-child(6) {
+      top: 45%;
+      right: -100px;
+      animation-delay: 0.3s;
+      animation-duration: 2.7s;
+    }
+    
+    .meteor:nth-child(7) {
+      top: 65%;
+      right: -100px;
+      animation-delay: 3.2s;
+      animation-duration: 2.1s;
+    }
+    
+    .meteor:nth-child(8) {
+      top: 85%;
+      right: -100px;
+      animation-delay: 1.5s;
+      animation-duration: 2.9s;
+    }
+    
+    /* Page fade-in animation */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+    
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body class="bg-black text-white font-sans min-h-screen flex flex-col items-center justify-center p-12">
+  <!-- Meteor Shower Background -->
+  <div class="meteor-shower">
+    <div class="meteor"></div>
+    <div class="meteor"></div>
+    <div class="meteor"></div>
+    <div class="meteor"></div>
+    <div class="meteor right-to-left"></div>
+    <div class="meteor right-to-left"></div>
+    <div class="meteor right-to-left"></div>
+    <div class="meteor right-to-left"></div>
+  </div>
+  
+  <h1 class="text-5xl md:text-6xl font-bold mb-12" style="font-family: 'MedievalSharp', cursive; letter-spacing: 1px;">Explore Alumni</h1>
+  <!-- Fixed Search and Filter Controls -->
+  <div class="search-container" id="searchContainer">
+    <button class="search-icon-btn" id="searchIconBtn" aria-label="Search alumni">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-gray-300">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
+      </svg>
+    </button>
+    <input type="text" class="search-input" id="searchInput" placeholder="search alumni" autocomplete="off" />
+    <button class="search-close-btn" id="searchCloseBtn" title="Close search" style="display:none;">&times;</button>
+  </div>
+
+  <div class="filter-container" id="filterContainer">
+    <button class="filter-btn" id="filterBtn">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 mr-2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
+      </svg>
+      Filter
+    </button>
+    <div class="filter-dropdown" id="filterDropdown">
+      <div class="filter-option" data-filter="all">All Alumni</div>
+      <div class="filter-option" data-filter="professionals">Job Professionals</div>
+      <div class="filter-option" data-filter="founders">Startup Founders</div>
+    </div>
+  </div>
+
+  <div class="rainbow-border w-full max-w-7xl fade-in">
+    <div class="glass p-10 overflow-x-auto" style="position: relative;">
+      <table class="alumni-table min-w-full divide-y divide-gray-800 text-lg" id="alumniTable">
+        <thead>
+          <tr>
+            <th class="py-5 text-left font-semibold uppercase tracking-wider text-gray-200">Name</th>
+            <th class="py-5 text-left font-semibold uppercase tracking-wider text-gray-200">Batch</th>
+            <th class="py-5 text-left font-semibold uppercase tracking-wider text-gray-200">CGPA</th>
+            <th class="py-5 text-left font-semibold uppercase tracking-wider text-gray-200">Profession</th>
+            <th class="py-5 text-left font-semibold uppercase tracking-wider text-gray-200">Company</th>
+            <th class="py-5 text-center font-semibold uppercase tracking-wider text-gray-200">Connect</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-900">
+          <tr data-category="professionals"><td class="py-6 whitespace-nowrap font-medium">Aarav Sharma</td><td class="py-6 whitespace-nowrap">2018</td><td class="py-6 whitespace-nowrap">9.1</td><td class="py-6 whitespace-nowrap">Software Engineer</td><td class="py-6 whitespace-nowrap">Google</td><td class="py-6 whitespace-nowrap text-center"><button class="connect-btn" onclick="openProfile('aarav-sharma')">Connect</button></td></tr>
+          <tr data-category="professionals"><td class="py-6 whitespace-nowrap font-medium">Priya Verma</td><td class="py-6 whitespace-nowrap">2017</td><td class="py-6 whitespace-nowrap">8.7</td><td class="py-6 whitespace-nowrap">Data Scientist</td><td class="py-6 whitespace-nowrap">Microsoft</td><td class="py-6 whitespace-nowrap text-center"><button class="connect-btn" onclick="openProfile('priya-verma')">Connect</button></td></tr>
+          <tr data-category="professionals"><td class="py-6 whitespace-nowrap font-medium">Rahul Singh</td><td class="py-6 whitespace-nowrap">2016</td><td class="py-6 whitespace-nowrap">8.9</td><td class="py-6 whitespace-nowrap">Product Manager</td><td class="py-6 whitespace-nowrap">Amazon</td><td class="py-6 whitespace-nowrap text-center"><button class="connect-btn" onclick="openProfile('rahul-singh')">Connect</button></td></tr>
+          <tr data-category="professionals"><td class="py-6 whitespace-nowrap font-medium">Sneha Patel</td><td class="py-6 whitespace-nowrap">2019</td><td class="py-6 whitespace-nowrap">9.3</td><td class="py-6 whitespace-nowrap">UX Designer</td><td class="py-6 whitespace-nowrap">Adobe</td><td class="py-6 whitespace-nowrap text-center"><button class="connect-btn" onclick="openProfile('sneha-patel')">Connect</button></td></tr>
+          <tr data-category="professionals"><td class="py-6 whitespace-nowrap font-medium">Vikram Joshi</td><td class="py-6 whitespace-nowrap">2015</td><td class="py-6 whitespace-nowrap">8.5</td><td class="py-6 whitespace-nowrap">Consultant</td><td class="py-6 whitespace-nowrap">Deloitte</td><td class="py-6 whitespace-nowrap text-center"><button class="connect-btn" onclick="openProfile('vikram-joshi')">Connect</button></td></tr>
+          <tr data-category="founders"><td class="py-6 whitespace-nowrap font-medium">Meera Nair</td><td class="py-6 whitespace-nowrap">2020</td><td class="py-6 whitespace-nowrap">9.5</td><td class="py-6 whitespace-nowrap">CEO & Founder</td><td class="py-6 whitespace-nowrap">TechFlow AI</td><td class="py-6 whitespace-nowrap text-center"><button class="connect-btn" onclick="openProfile('meera-nair')">Connect</button></td></tr>
+          <tr data-category="professionals"><td class="py-6 whitespace-nowrap font-medium">Rohan Gupta</td><td class="py-6 whitespace-nowrap">2014</td><td class="py-6 whitespace-nowrap">8.2</td><td class="py-6 whitespace-nowrap">Business Analyst</td><td class="py-6 whitespace-nowrap">McKinsey</td><td class="py-6 whitespace-nowrap text-center"><button class="connect-btn" onclick="openProfile('rohan-gupta')">Connect</button></td></tr>
+          <tr data-category="professionals"><td class="py-6 whitespace-nowrap font-medium">Simran Kaur</td><td class="py-6 whitespace-nowrap">2013</td><td class="py-6 whitespace-nowrap">8.8</td><td class="py-6 whitespace-nowrap">Marketing Lead</td><td class="py-6 whitespace-nowrap">Unilever</td><td class="py-6 whitespace-nowrap text-center"><button class="connect-btn" onclick="openProfile('simran-kaur')">Connect</button></td></tr>
+          <tr data-category="founders"><td class="py-6 whitespace-nowrap font-medium">Ankit Desai</td><td class="py-6 whitespace-nowrap">2012</td><td class="py-6 whitespace-nowrap">8.6</td><td class="py-6 whitespace-nowrap">CTO & Co-founder</td><td class="py-6 whitespace-nowrap">Paytm</td><td class="py-6 whitespace-nowrap text-center"><button class="connect-btn" onclick="openProfile('ankit-desai')">Connect</button></td></tr>
+          <tr data-category="professionals"><td class="py-6 whitespace-nowrap font-medium">Tanya Rao</td><td class="py-6 whitespace-nowrap">2021</td><td class="py-6 whitespace-nowrap">9.7</td><td class="py-6 whitespace-nowrap">Frontend Developer</td><td class="py-6 whitespace-nowrap">Flipkart</td><td class="py-6 whitespace-nowrap text-center"><button class="connect-btn" onclick="openProfile('tanya-rao')">Connect</button></td></tr>
+          <tr data-category="professionals"><td class="py-6 whitespace-nowrap font-medium">Siddharth Jain</td><td class="py-6 whitespace-nowrap">2010</td><td class="py-6 whitespace-nowrap">8.4</td><td class="py-6 whitespace-nowrap">Cloud Architect</td><td class="py-6 whitespace-nowrap">IBM</td><td class="py-6 whitespace-nowrap text-center"><button class="connect-btn" onclick="openProfile('siddharth-jain')">Connect</button></td></tr>
+          <tr data-category="professionals"><td class="py-6 whitespace-nowrap font-medium">Neha Sethi</td><td class="py-6 whitespace-nowrap">2011</td><td class="py-6 whitespace-nowrap">8.9</td><td class="py-6 whitespace-nowrap">HR Manager</td><td class="py-6 whitespace-nowrap">TCS</td><td class="py-6 whitespace-nowrap text-center"><button class="connect-btn" onclick="openProfile('neha-sethi')">Connect</button></td></tr>
+          <tr data-category="professionals"><td class="py-6 whitespace-nowrap font-medium">Karan Mehta</td><td class="py-6 whitespace-nowrap">2016</td><td class="py-6 whitespace-nowrap">9.0</td><td class="py-6 whitespace-nowrap">DevOps Engineer</td><td class="py-6 whitespace-nowrap">Infosys</td><td class="py-6 whitespace-nowrap text-center"><button class="connect-btn" onclick="openProfile('karan-mehta')">Connect</button></td></tr>
+          <tr data-category="founders"><td class="py-6 whitespace-nowrap font-medium">Aisha Khan</td><td class="py-6 whitespace-nowrap">2018</td><td class="py-6 whitespace-nowrap">9.2</td><td class="py-6 whitespace-nowrap">Founder & CEO</td><td class="py-6 whitespace-nowrap">EduTech Solutions</td><td class="py-6 whitespace-nowrap text-center"><button class="connect-btn" onclick="openProfile('aisha-khan')">Connect</button></td></tr>
+          <tr data-category="professionals"><td class="py-6 whitespace-nowrap font-medium">Yash Patel</td><td class="py-6 whitespace-nowrap">2019</td><td class="py-6 whitespace-nowrap">8.8</td><td class="py-6 whitespace-nowrap">QA Lead</td><td class="py-6 whitespace-nowrap">Zomato</td><td class="py-6 whitespace-nowrap text-center"><button class="connect-btn" onclick="openProfile('yash-patel')">Connect</button></td></tr>
+          <tr data-category="founders"><td class="py-6 whitespace-nowrap font-medium">Rajesh Kumar</td><td class="py-6 whitespace-nowrap">2014</td><td class="py-6 whitespace-nowrap">8.7</td><td class="py-6 whitespace-nowrap">Co-founder</td><td class="py-6 whitespace-nowrap">GreenTech Innovations</td><td class="py-6 whitespace-nowrap text-center"><button class="connect-btn" onclick="openProfile('rajesh-kumar')">Connect</button></td></tr>
+          <tr data-category="professionals"><td class="py-6 whitespace-nowrap font-medium">Deepika Singh</td><td class="py-6 whitespace-nowrap">2017</td><td class="py-6 whitespace-nowrap">9.0</td><td class="py-6 whitespace-nowrap">Data Analyst</td><td class="py-6 whitespace-nowrap">Netflix</td><td class="py-6 whitespace-nowrap text-center"><button class="connect-btn" onclick="openProfile('deepika-singh')">Connect</button></td></tr>
+          <tr data-category="founders"><td class="py-6 whitespace-nowrap font-medium">Arjun Reddy</td><td class="py-6 whitespace-nowrap">2015</td><td class="py-6 whitespace-nowrap">8.9</td><td class="py-6 whitespace-nowrap">Founder</td><td class="py-6 whitespace-nowrap">HealthTech Pro</td><td class="py-6 whitespace-nowrap text-center"><button class="connect-btn" onclick="openProfile('arjun-reddy')">Connect</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script>
+    const searchContainer = document.getElementById('searchContainer');
+    const searchIconBtn = document.getElementById('searchIconBtn');
+    const searchInput = document.getElementById('searchInput');
+    const searchCloseBtn = document.getElementById('searchCloseBtn');
+    const alumniTable = document.getElementById('alumniTable');
+    const filterContainer = document.getElementById('filterContainer');
+    const filterBtn = document.getElementById('filterBtn');
+    const filterDropdown = document.getElementById('filterDropdown');
+    const filterOptions = document.querySelectorAll('.filter-option');
+
+    let currentFilter = 'all';
+    let currentSearch = '';
+
+    // Expand search
+    searchIconBtn.addEventListener('click', function(e) {
+      searchContainer.classList.add('active');
+      searchInput.style.display = 'block';
+      searchInput.focus();
+      searchCloseBtn.style.display = 'inline';
+    });
+    // Collapse search
+    searchCloseBtn.addEventListener('click', function(e) {
+      searchContainer.classList.remove('active');
+      searchInput.value = '';
+      searchInput.blur();
+      searchInput.style.display = '';
+      searchCloseBtn.style.display = 'none';
+      currentSearch = '';
+      applyFilters();
+    });
+    // Click outside to close search
+    document.addEventListener('mousedown', function(e) {
+      if (!searchContainer.contains(e.target)) {
+        searchContainer.classList.remove('active');
+        searchInput.value = '';
+        searchInput.style.display = '';
+        searchCloseBtn.style.display = 'none';
+        currentSearch = '';
+        applyFilters();
+      }
+    });
+    // Filter table by search
+    searchInput.addEventListener('input', function(e) {
+      currentSearch = e.target.value.toLowerCase();
+      applyFilters();
+    });
+
+    // Filter dropdown functionality
+    filterBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      filterDropdown.classList.toggle('active');
+    });
+    // Close dropdown when clicking outside
+    document.addEventListener('mousedown', function(e) {
+      if (!filterContainer.contains(e.target)) {
+        filterDropdown.classList.remove('active');
+      }
+    });
+    // Handle filter option clicks
+    filterOptions.forEach(option => {
+      option.addEventListener('click', function(e) {
+        e.stopPropagation();
+        currentFilter = this.dataset.filter;
+        // Update active state
+        filterOptions.forEach(opt => opt.classList.remove('active'));
+        this.classList.add('active');
+        // Close dropdown
+        filterDropdown.classList.remove('active');
+        // Apply filters
+        applyFilters();
+      });
+    });
+
+    function applyFilters() {
+      const rows = alumniTable.querySelectorAll('tbody tr');
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        const category = row.dataset.category;
+        
+        let showRow = true;
+        
+        // Apply search filter
+        if (currentSearch && !text.includes(currentSearch)) {
+          showRow = false;
+        }
+        
+        // Apply category filter
+        if (currentFilter !== 'all' && category !== currentFilter) {
+          showRow = false;
+        }
+        
+        row.style.display = showRow ? '' : 'none';
+      });
+    }
+
+    // Initialize with "All Alumni" selected
+    document.querySelector('.filter-option[data-filter="all"]').classList.add('active');
+
+    // Function to open alumni profile
+    function openProfile(alumniId) {
+      window.open(`/alumni-profile.html?id=${alumniId}`, '_blank');
+    }
+  </script>
+</body>
+</html>
