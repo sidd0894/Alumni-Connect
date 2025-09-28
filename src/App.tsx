@@ -19,10 +19,27 @@ function App() {
   const [isRoleSelectionModalOpen, setIsRoleSelectionModalOpen] = useState(false)
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('view') === 'dashboard') {
+      setCurrentPage('dashboard')
+      console.log('Dashboard view requested via URL parameter.')
+    }
     // Trigger animation after component mounts
     const timer = setTimeout(() => setIsLoaded(true), 100)
     return () => clearTimeout(timer)
   }, [])
+
+  useEffect(() => {
+    const originalTitle = document.title
+    if (currentPage === 'dashboard') {
+      document.title = 'Dashboard'
+    } else {
+      document.title = originalTitle
+    }
+    return () => {
+      document.title = originalTitle
+    }
+  }, [currentPage])
 
   const handleGetStarted = () => {
     // Add a brief delay for smooth transition
